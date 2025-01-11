@@ -57,6 +57,10 @@ export interface DragListRenderItemInfo<T> extends ListRenderItemInfo<T> {
   isActive: boolean;
 }
 
+export class RefreshableLayoutFlatList<T> extends FlatList<T> {
+  refreshLayout() {}
+}
+
 // Used merely to trigger FlatList to re-render when necessary. Changing the
 // activeKey or the panIndex should both trigger re-render.
 interface ExtraData {
@@ -80,7 +84,7 @@ interface Props<T> extends Omit<FlatListProps<T>, "renderItem"> {
 
 function DragListImpl<T>(
   props: Props<T>,
-  ref?: React.ForwardedRef<FlatList<T> | null>
+  ref?: React.ForwardedRef<RefreshableLayoutFlatList<T> | null>
 ) {
   const {
     containerStyle,
@@ -550,12 +554,6 @@ function CellRendererComponent<T>(props: CellRendererProps<T>) {
       {children}
     </Animated.View>
   );
-}
-
-declare module "react" {
-  function forwardRef<T, P = {}>(
-    render: (props: P, ref: React.Ref<T>) => React.ReactNode | null
-  ): (props: P & React.RefAttributes<T>) => React.ReactNode | null;
 }
 
 const DragList = React.forwardRef(DragListImpl);
