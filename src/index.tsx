@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -365,21 +366,32 @@ function DragListImpl<T>(
     [onScroll]
   );
 
+  const measureLayout = useCallback(() => {
+    flatWrapRef.current?.measure((_x, _y, width, height, pageX, pageY) => {
+      // Even though we capture x/y during onPanResponderGrant, we still
+      // capture height here because measureInWindow can return 0 height.
+      flatWrapLayout.current = props.horizontal
+        ? { pos: pageX, extent: width }
+        : { pos: pageY, extent: height };
+    });
+  }, [flatWrapRef, flatWrapLayout]);
+
   const onDragLayout = useCallback(
     (evt: LayoutChangeEvent) => {
-      flatWrapRef.current?.measure((_x, _y, width, height, pageX, pageY) => {
-        // Even though we capture x/y during onPanResponderGrant, we still
-        // capture height here because measureInWindow can return 0 height.
-        flatWrapLayout.current = props.horizontal
-          ? { pos: pageX, extent: width }
-          : { pos: pageY, extent: height };
-      });
+      measureLayout();
       if (onLayout) {
         onLayout(evt);
       }
     },
     [onLayout]
   );
+
+  useImperativeHandle(ref, () => ({
+    refreshLayout() {
+      measureLayout();
+    },
+  }));
+
   return (
     <DragListProvider
       activeKey={activeKey.current}
