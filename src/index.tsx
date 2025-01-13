@@ -57,8 +57,8 @@ export interface DragListRenderItemInfo<T> extends ListRenderItemInfo<T> {
   isActive: boolean;
 }
 
-export class RefreshableLayoutDragList {
-  refreshLayout() {}
+export interface RefreshableLayoutDragList<T> extends FlatList<T> {
+  refreshLayout: () => void;
 }
 
 // Used merely to trigger FlatList to re-render when necessary. Changing the
@@ -84,7 +84,7 @@ interface Props<T> extends Omit<FlatListProps<T>, "renderItem"> {
 
 function DragListImpl<T>(
   props: Props<T>,
-  ref?: React.ForwardedRef<RefreshableLayoutDragList>
+  ref?: React.ForwardedRef<RefreshableLayoutDragList<T>>
 ) {
   const {
     containerStyle,
@@ -390,7 +390,9 @@ function DragListImpl<T>(
     [onLayout]
   );
 
+  /** @ts-ignore */
   useImperativeHandle(ref, () => ({
+    ...flatRef.current,
     refreshLayout() {
       measureLayout();
     },
