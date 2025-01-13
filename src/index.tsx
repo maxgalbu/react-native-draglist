@@ -57,7 +57,7 @@ export interface DragListRenderItemInfo<T> extends ListRenderItemInfo<T> {
   isActive: boolean;
 }
 
-export interface RefreshableLayoutDragList<T> extends FlatList<T> {
+export interface RefreshableLayoutDragList {
   refreshLayout: () => void;
 }
 
@@ -84,7 +84,7 @@ interface Props<T> extends Omit<FlatListProps<T>, "renderItem"> {
 
 function DragListImpl<T>(
   props: Props<T>,
-  ref?: React.ForwardedRef<RefreshableLayoutDragList<T>>
+  ref?: React.ForwardedRef<FlatList<T> & RefreshableLayoutDragList> | null
 ) {
   const {
     containerStyle,
