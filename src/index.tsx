@@ -353,11 +353,15 @@ function DragListImpl<T>(
     [props.renderItem, data.length]
   );
 
+  const calculateScrollPos = useCallback((event: any) => {
+    scrollPos.current = props.horizontal
+      ? event.nativeEvent.contentOffset.x
+      : event.nativeEvent.contentOffset.y;
+  }, []);
+
   const onDragScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      scrollPos.current = props.horizontal
-        ? event.nativeEvent.contentOffset.x
-        : event.nativeEvent.contentOffset.y;
+      calculateScrollPos(event);
       if (onScroll) {
         onScroll(event);
       }
@@ -374,12 +378,14 @@ function DragListImpl<T>(
           ? { pos: pageX, extent: width }
           : { pos: pageY, extent: height };
       });
+      calculateScrollPos(evt);
       if (onLayout) {
         onLayout(evt);
       }
     },
     [onLayout]
   );
+
   return (
     <DragListProvider
       activeKey={activeKey.current}
