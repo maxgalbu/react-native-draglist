@@ -1,6 +1,6 @@
 {
   "name": "react-native-draglist",
-  "version": "3.8.0",
+  "version": "3.8.1",
   "description": "FlatList that reorders items by dragging",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -40,7 +40,7 @@
     "@types/jest": "^29.2.3",
     "@types/react": "^18.2.6",
     "microbundle-crl": "^0.13.11",
-    "react": "^18.1.0",
+    "react": "^18.3.1",
     "react-native": "^0.76.3",
     "release-it": "^15.5.1"
   },
